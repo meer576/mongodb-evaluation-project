@@ -1,0 +1,68 @@
+---
+- name: Create MongoDB Data Directory
+  file:
+    path: "{{ mongodb_db_path }}"
+    state: directory
+    owner: mongodb
+    group: mongodb
+    mode: '0755'
+
+- name: Create MongoDB Log Directory
+  file:
+    path: /var/log/mongodb
+    state: directory
+    owner: mongodb
+    group: mongodb
+    mode: '0755'
+
+- name: Create MongoDB Log File
+  file:
+    path: "{{ mongodb_log_path }}"
+    state: touch
+    owner: mongodb
+    group: mongodb
+    mode: '0644'
+
+- name: Deploy mongod.conf
+  template:
+    src: mongod.conf.j2
+    dest: /etc/mongod.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart mongodb
+
+- name: Enable MongoDB Service
+  service:
+    name: "{{ mongodb_service_name }}"
+    enabled: true
+
+- name: Start MongoDB Service
+  service:
+    name: "{{ mongodb_service_name }}"
+    state: started
+
+
+
+- name: Check Replica Set Status
+  shell: mongosh --quiet --eval "rs.status().ok"
+  register: rs_status
+  failed_when: false
+  changed_when: false
+  when: "'tag_mongodb_primary' in group_names"
+
+- name: Initialize Replica Set
+  shell: |
+    mongosh --eval '
+      rs.initiate({
+        _id: "rs0",
+        members: [
+          { _id: 0, host: "{{ groups["tag_mongodb_primary"][0] }}:27017" },
+          { _id: 1, host: "{{ groups["tag_mongodb_secondary1"][0] }}:27017" },
+          { _id: 2, host: "{{ groups["tag_mongodb_secondary2"][0] }}:27017" }
+        ]
+      })
+    '
+  when:
+    - "'tag_mongodb_primary' in group_names"
+    - rs_status.rc != 0

@@ -1,0 +1,17 @@
+storage:
+  dbPath: {{ mongodb_db_path }}
+
+systemLog:
+  destination: file
+  logAppend: true
+  path: {{ mongodb_log_path }}
+
+net:
+  port: {{ mongodb_port }}
+  bindIp: {{ mongodb_bind_ip }}
+
+processManagement:
+  timeZoneInfo: /usr/share/zoneinfo
+
+replication:
+  replSetName: {{ mongodb_replica_set_name }}

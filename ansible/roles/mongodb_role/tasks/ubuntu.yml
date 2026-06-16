@@ -1,0 +1,33 @@
+---
+- name: Install Required Packages
+  apt:
+    name:
+      - gnupg
+      - curl
+    state: present
+    update_cache: yes
+
+- name: Import MongoDB GPG Key
+  shell: |
+    curl -fsSL https://pgp.mongodb.com/server-{{ mongodb_major_version }}.asc | \
+    gpg --dearmor -o /usr/share/keyrings/mongodb-server-{{ mongodb_major_version }}.gpg
+  args:
+    creates: /usr/share/keyrings/mongodb-server-{{ mongodb_major_version }}.gpg
+
+- name: Configure MongoDB Repository
+  copy:
+    content: |
+      deb [ signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse
+    dest: /etc/apt/sources.list.d/mongodb-org-8.0.list
+
+- name: Update Apt Cache
+  apt:
+    update_cache: yes
+
+
+- name: Install MongoDB
+  apt:
+    name:
+      - mongodb-org
+      - mongodb-mongosh
+    state: present

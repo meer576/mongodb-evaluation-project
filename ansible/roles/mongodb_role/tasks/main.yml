@@ -1,0 +1,11 @@
+---
+- name: Include Ubuntu Tasks
+  import_tasks: ubuntu.yml
+  when: ansible_os_family == "Debian"
+
+- name: Include CentOS Tasks
+  import_tasks: centos.yml
+  when: ansible_os_family == "RedHat"
+
+- name: Include Configure Tasks
+  import_tasks: configure.yml

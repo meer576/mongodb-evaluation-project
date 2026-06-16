@@ -1,0 +1,7 @@
+---
+- name: Install and Configure MongoDB
+  hosts: tag_mongodb_primary:tag_mongodb_secondary1:tag_mongodb_secondary2
+  become: true
+
+  roles:
+    - mongodb_role
