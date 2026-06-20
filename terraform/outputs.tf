@@ -16,14 +16,3 @@ output "mongodb_secondary2_private_ip" {
 
 
 
-output "terraform_state_bucket" {
-  value = module.backend.bucket_name
-}
-
-output "terraform_lock_table" {
-  value = module.backend.dynamodb_table_name
-}
-
-output "mongodb_backup_bucket" {
-  value = module.backup_s3.backup_bucket_name
-}

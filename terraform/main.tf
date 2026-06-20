@@ -113,24 +113,3 @@ module "mongodb" {
 }
 
 
-
-
-
-
-module "backend" {
-
-  source = "./modules/storage/backend"
-
-  bucket_name = var.terraform_state_bucket
-
-  dynamodb_table_name = var.terraform_lock_table
-}
-
-
-
-module "backup_s3" {
-
-  source = "./modules/storage/backup-s3"
-
-  bucket_prefix = var.mongodb_backup_bucket_prefix
-}

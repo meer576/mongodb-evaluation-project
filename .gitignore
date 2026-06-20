@@ -3,6 +3,10 @@
 *.tfstate.*
 .terraform/
 .terraform.lock.hcl
+*.tfvars
+
+# Keys
+*.pem
 
 # Ansible
 *.retry

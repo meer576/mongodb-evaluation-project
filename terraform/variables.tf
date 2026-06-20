@@ -69,19 +69,7 @@ variable "instance_type_mongo" {
 }
 
 
-
-
-#===============S3 Bucket variables===========
-
-
-variable "terraform_state_bucket" {
-  default = "mongodb-tfstate-726271906433"
-}
-
-variable "terraform_lock_table" {
-  default = "terraform-state-lock"
-}
-
 variable "mongodb_backup_bucket_prefix" {
-  default = "mongodb-backup"
+  description = "MongoDB backup S3 bucket prefix"
+  type        = string
 }
