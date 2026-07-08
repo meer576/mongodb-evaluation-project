@@ -42,7 +42,11 @@
     name: "{{ mongodb_service_name }}"
     state: started
 
-
+- name: Wait for MongoDB Port
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 27017
+    timeout: 60
 
 - name: Check Replica Set Status
   shell: mongosh --quiet --eval "rs.status().ok"
